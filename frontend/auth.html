@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Sign Up - Drone Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            color: #4e73df;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e3e6f0;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #858796;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .tab.active {
+            color: #4e73df;
+        }
+        
+        .tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #4e73df;
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .form-container {
+            display: none;
+        }
+        
+        .form-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #5a5c69;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d3e2;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #bac8f3;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #4e73df;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2e59d9;
+        }
+        
+        .btn-guest {
+            background: #f8f9fc;
+            color: #4e73df;
+            border: 1px solid #d1d3e2;
+            margin-top: 15px;
+        }
+        
+        .btn-guest:hover {
+            background: #e9ecef;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #b7b9cc;
+            font-size: 14px;
+        }
+        
+        .divider:before,
+        .divider:after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e3e6f0;
+            margin: 0 10px;
+        }
+        
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .alert-danger {
+            color: #e74a3b;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-success {
+            color: #1cc88a;
+            background-color: #d1f3e8;
+            border: 1px solid #b1dfd0;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(78, 115, 223, 0.3);
+            border-radius: 50%;
+            border-top-color: #4e73df;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+        
+        .forgot-password a {
+            color: #4e73df;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #858796;
+        }
+        
+        .form-footer a {
+            color: #4e73df;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>Drone Delivery</h1>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('signin')">Sign In</div>
+            <div class="tab" onclick="switchTab('signup')">Sign Up</div>
+        </div>
+        
+        <div id="error-message" class="alert alert-danger"></div>
+        <div id="success-message" class="alert alert-success"></div>
+        
+        <!-- Sign In Form -->
+        <div id="signin-form" class="form-container active">
+            <form id="loginForm" onsubmit="signIn(event)">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label for="login-password">Password</label>
+                        <div class="forgot-password">
+                            <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+                        </div>
+                    </div>
+                    <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn" id="login-btn">
+                    <span>Sign In</span>
+                    <div class="loading" id="login-loading">
+                        <div class="spinner"></div>
+                    </div>
+                </button>
+            </form>
+            
+            <div class="divider">OR</div>
+            
+            <button class="btn btn-guest" onclick="signInAsGuest()" id="guest-btn">
+                <span>Continue as Guest</span>
+                <div class="loading" id="guest-loading">
+                    <div class="spinner"></div>
+                </div>
+            </button>
+        </div>
+        
+        <!-- Sign Up Form -->
+        <div id="signup-form" class="form-container">
+            <form id="signupForm" onsubmit="signUp(event)">
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password (min 6 characters)</label>
+                    <input type="password" id="signup-password" class="form-control" placeholder="Create a password" minlength="6" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" class="form-control" placeholder="Confirm your password" minlength="6" required>
+                </div>
+                <button type="submit" class="btn" id="signup-btn">
+                    <span>Create Account</span>
+                    <div class="loading" id="signup-loading">
+                        <div class="spinner"></div>
+                    </div>
+                </button>
+            </form>
+            
+            <div class="form-footer">
+                Already have an account? <a href="#" onclick="switchTab('signin')">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword,
+            signInAnonymously,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPvVwJ3Z2lVH18iXKLMxOsoG8BsmGANwA",
+            authDomain: "drone-route-planner-7c5b8.firebaseapp.com",
+            projectId: "drone-route-planner-7c5b8",
+            storageBucket: "drone-route-planner-7c5b8.firebasestorage.app",
+            messagingSenderId: "771436681045",
+            appId: "1:771436681045:web:cd36faa3ba41d0638ec1dc",
+            measurementId: "G-Z3E6ZMBT3T"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        // Set auth to window for global access
+        window.firebaseAuth = auth;
+
+        // Check auth state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, redirect to index.html (dashboard)
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Helper function to show error message
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            // Hide success message if visible
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        // Helper function to show success message
+        function showSuccess(message) {
+            const successElement = document.getElementById('success-message');
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+            
+            // Hide error message if visible
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        // Toggle loading state
+        function setLoading(buttonId, isLoading) {
+            const button = document.getElementById(buttonId);
+            const spinner = button.querySelector('.loading');
+            const buttonText = button.querySelector('span');
+            
+            if (isLoading) {
+                button.disabled = true;
+                spinner.style.display = 'inline-block';
+                buttonText.style.visibility = 'hidden';
+            } else {
+                button.disabled = false;
+                spinner.style.display = 'none';
+                buttonText.style.visibility = 'visible';
+            }
+        }
+
+        // Switch between sign in and sign up tabs
+        window.switchTab = (tab) => {
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => {
+                if ((tab === 'signin' && t.textContent === 'Sign In') || 
+                    (tab === 'signup' && t.textContent === 'Sign Up')) {
+                    t.classList.add('active');
+                }
+            });
+            
+            // Show corresponding form
+            document.getElementById('signin-form').classList.toggle('active', tab === 'signin');
+            document.getElementById('signup-form').classList.toggle('active', tab === 'signup');
+            
+            // Clear messages when switching tabs
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        };
+
+        // Show forgot password
+        window.showForgotPassword = () => {
+            const email = document.getElementById('login-email').value.trim();
+            let emailParam = '';
+            if (email) {
+                emailParam = `?email=${encodeURIComponent(email)}`;
+            }
+            // You can implement forgot password functionality here
+            alert('Please contact support to reset your password.');
+            return false;
+        };
+
+        // Sign in with email and password
+        window.signIn = async (event) => {
+            if (event) event.preventDefault();
+            
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                showError('Please enter both email and password');
+                return;
+            }
+            
+            try {
+                setLoading('login-btn', true);
+                await signInWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged will handle the redirect
+            } catch (error) {
+                let errorMessage = 'Failed to sign in. Please try again.';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password':
+                        errorMessage = 'Invalid email or password';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Too many failed attempts. Please try again later.';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'This account has been disabled.';
+                        break;
+                }
+                showError(errorMessage);
+            } finally {
+                setLoading('login-btn', false);
+            }
+        };
+
+        // Sign up with email and password
+        window.signUp = async (event) => {
+            if (event) event.preventDefault();
+            
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            // Basic validation
+            if (!email || !password || !confirmPassword) {
+                showError('Please fill in all fields');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters long');
+                return;
+            }
+            
+            try {
+                setLoading('signup-btn', true);
+                await createUserWithEmailAndPassword(auth, email, password);
+                showSuccess('Account created successfully! Redirecting...');
+                // onAuthStateChanged will handle the redirect
+            } catch (error) {
+                let errorMessage = 'Failed to create account. Please try again.';
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'An account with this email already exists';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Please enter a valid email address';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Password is too weak';
+                        break;
+                }
+                showError(errorMessage);
+            } finally {
+                setLoading('signup-btn', false);
+            }
+        };
+
+        // Sign in as guest (anonymous)
+        window.signInAsGuest = async () => {
+            try {
+                setLoading('guest-btn', true);
+                await signInAnonymously(auth);
+                // onAuthStateChanged will handle the redirect
+            } catch (error) {
+                console.error('Guest sign in error:', error);
+                showError('Failed to sign in as guest. Please try again.');
+                setLoading('guest-btn', false);
+            }
+        };
+    </script>
+</body>
+</html>

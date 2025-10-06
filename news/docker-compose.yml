@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - db
+    environment:
+      - DJANGO_SETTINGS_MODULE=dronehackon.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/dronedelivery
+
+  celery:
+    build: .
+    command: celery -A dronehackon worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - db
+    environment:
+      - DJANGO_SETTINGS_MODULE=dronehackon.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/dronedelivery
+
+  celery-beat:
+    build: .
+    command: celery -A dronehackon beat -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - db
+    environment:
+      - DJANGO_SETTINGS_MODULE=dronehackon.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/dronedelivery
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgis/postgis:13-3.1
+    environment:
+      - POSTGRES_DB=dronedelivery
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
