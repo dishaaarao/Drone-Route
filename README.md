@@ -45,8 +45,3 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 <a href="https://enigmatic-inlet-90208.herokuapp.com/" target="_blank">Heroku Deployment</a>
-## Contributors
-* [Yash Mantri](https://github.com/yashm1)
-* [Vishwesh Pillai](https://github.com/theViz343)
-* [Shraddha Bhagawat](https://github.com/shraddhab29)
-* [Diplesh Mankape](https://github.com/dips4982)
